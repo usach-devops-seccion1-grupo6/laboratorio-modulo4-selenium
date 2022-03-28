@@ -1,6 +1,4 @@
-package selenium;
-
-import static org.junit.Assert.assertEquals;
+package test.java.selenium;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -20,6 +18,8 @@ import org.openqa.selenium.Keys;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.After;
+import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -44,6 +44,7 @@ public class AppTest {
         URL url;
         try {
                 url = new URL("http://sfirefox:4444");
+                //url = new URL("http://localhost:4444");
                 driver = new RemoteWebDriver(url, options);
         } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -52,11 +53,11 @@ public class AppTest {
         //driver = new ChromeDriver(options);
         //driver = new FirefoxDriver();
         driver.manage().deleteAllCookies();
+        //driver.get("http://localhost:9090/");
+        driver.get("http://laboratorio-modulo4-frontend/");
     }
 
     public Dictionary maqueta (int ahorro, int sueldo) {
-        driver.get("http://localhost:9090/");
-
         driver.findElement(By.id("ahorro")).clear();
         driver.findElement(By.id("ahorro")).sendKeys(Integer.toString(ahorro));
 
@@ -65,28 +66,33 @@ public class AppTest {
 
         driver.findElement(By.id("calcular")).click();
 
-        WebDriverWait waitTemp = new WebDriverWait(driver, 30);
+        WebDriverWait waitTemp = new WebDriverWait(driver, 120);
         waitTemp.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("resultado"))));
 
         Dictionary resultado = new Hashtable();
 
-        resultado.put("diez", driver.findElement(By.id("diez")).getText());
-        resultado.put("impuesto", driver.findElement(By.id("impuesto")).getText());
-        resultado.put("saldo", driver.findElement(By.id("saldo")).getText());
+        Integer diez = Integer.valueOf(driver.findElement(By.id("diez")).getText().replace(".", "").replace("$", ""));
+        String impuesto = driver.findElement(By.id("impuesto")).getText();
+        Integer saldo = Integer.valueOf(driver.findElement(By.id("saldo")).getText().replace(".", "").replace("$", ""));
+        resultado.put("diez", diez);
+        resultado.put("impuesto", impuesto);
+        resultado.put("saldo", saldo);
 
-        driver.close();
+        driver.quit();
         return resultado;
     }
 
 
     @Test
     public void test1() {
-        Dictionary resultado = maqueta(200000000, 4500000);
+        Dictionary resultado = maqueta(20000000, 4500000);
         System.out.println("diez: " + resultado.get("diez"));
         System.out.println("impuesto: " + resultado.get("impuesto"));
         System.out.println("saldo: " + resultado.get("saldo"));
 
+        Assert.assertTrue((Integer)resultado.get("diez") > 0); 
         assertEquals(resultado.get("impuesto"), "Si");
+        Assert.assertTrue((Integer)resultado.get("saldo") > 0);
     }
 
     @Test
@@ -96,6 +102,8 @@ public class AppTest {
         System.out.println("impuesto: " + resultado.get("impuesto"));
         System.out.println("saldo: " + resultado.get("saldo"));
 
+        Assert.assertTrue((Integer)resultado.get("diez") > 0); 
         assertEquals(resultado.get("impuesto"), "No");
+        Assert.assertTrue((Integer)resultado.get("saldo") > 0);
     }
 }
