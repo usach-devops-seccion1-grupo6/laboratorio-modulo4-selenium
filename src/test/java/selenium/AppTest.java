@@ -71,9 +71,9 @@ public class AppTest {
 
         Dictionary resultado = new Hashtable();
 
-        Integer diez = Integer.valueOf(driver.findElement(By.id("diez")).getText().replace(".", "").replace("$", ""));
-        String impuesto = driver.findElement(By.id("impuesto")).getText();
-        Integer saldo = Integer.valueOf(driver.findElement(By.id("saldo")).getText().replace(".", "").replace("$", ""));
+        Long diez = Long.valueOf(driver.findElement(By.id("diez")).getText().replace(".", "").replace("$", ""));
+        Long impuesto = Long.valueOf(driver.findElement(By.id("impuesto")).getText().replace(".", "").replace("$", ""));
+        Long saldo = Long.valueOf(driver.findElement(By.id("saldo")).getText().replace(".", "").replace("$", ""));
         resultado.put("diez", diez);
         resultado.put("impuesto", impuesto);
         resultado.put("saldo", saldo);
@@ -90,9 +90,10 @@ public class AppTest {
         System.out.println("impuesto: " + resultado.get("impuesto"));
         System.out.println("saldo: " + resultado.get("saldo"));
 
-        Assert.assertTrue((Integer)resultado.get("diez") > 0); 
-        assertEquals(resultado.get("impuesto"), "Si");
-        Assert.assertTrue((Integer)resultado.get("saldo") > 0);
+        Assert.assertTrue((Long)resultado.get("diez") > 0); 
+        Assert.assertTrue((Long)resultado.get("impuesto") > 0); 
+        //assertEquals(resultado.get("impuesto"), "Si");
+        Assert.assertTrue((Long)resultado.get("saldo") > 0);
     }
 
     @Test
@@ -102,8 +103,8 @@ public class AppTest {
         System.out.println("impuesto: " + resultado.get("impuesto"));
         System.out.println("saldo: " + resultado.get("saldo"));
 
-        Assert.assertTrue((Integer)resultado.get("diez") > 0); 
-        assertEquals(resultado.get("impuesto"), "No");
-        Assert.assertTrue((Integer)resultado.get("saldo") > 0);
+        Assert.assertTrue((Long)resultado.get("diez") > 0);
+        Assert.assertTrue((Long)resultado.get("impuesto") == 0);
+        Assert.assertTrue((Long)resultado.get("saldo") > 0);
     }
 }
